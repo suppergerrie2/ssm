@@ -1,0 +1,39 @@
+ldc 90
+ldc 10
+ldc 71
+ldc 70
+ldc 69
+ldc 68
+ldc 67
+ldc 66
+ldc 65
+trap 1
+trap 1
+trap 1
+trap 1
+trap 1
+trap 1
+trap 1
+trap 1
+trap 0
+
+LDC 12
+trap 0
+
+LDC 451
+trap 0
+
+ldc 71
+ldc 70
+ldc 69
+ldc 68
+ldc 67
+ldc 66
+ldc 65
+trap 1
+trap 1
+trap 1
+trap 1
+trap 1
+trap 1
+trap 1

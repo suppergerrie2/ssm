@@ -111,7 +111,7 @@ public class Machine
     
     private void pushCopyOfReg( int r )
     {
-        push( registers.getReg(r), new MemoryAnnotation( "copy of " + Registers.getRegName(r), Color.cyan ) ) ;
+        push( registers.getReg(r), new MemoryAnnotation( "copy of " + Registers.getRegOrAliasName(r), Color.cyan ) ) ;
     }
     
     private void pushPCAsReturnAddr()
@@ -121,7 +121,7 @@ public class Machine
     
     private void pushMP()
     {
-        push( registers.getReg(Registers.MP), new MemoryAnnotation( "prev " + Registers.getRegName(Registers.MP), Color.blue ) ) ;
+        push( registers.getReg(Registers.MP), new MemoryAnnotation( "prev " + Registers.getRegOrAliasName(Registers.MP), Color.blue ) ) ;
     }
     
     private int pop()
@@ -309,6 +309,7 @@ public class Machine
                 tmp2 = pop() ;
                 tmp1 = pop() ;
                 push( execBinop( code, tmp1, tmp2 ) ) ;
+                annote(new MemoryAnnotation(String.format("%1$d %2$s %3$d", tmp1, state.instr.getRepr(), tmp2), null));
                 break ;
                 
             case Instruction.CTG_UNOP :

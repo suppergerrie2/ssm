@@ -19,10 +19,11 @@ public class StackTableModel extends AbstractTableModel
 
     private static final int C_ADDRESS = 0 ;
     private static final int C_VALUE   = 1 ;
-    protected static final int C_REGPTRS = 2 ;
-    public  static final int C_ANNOTE  = 3 ;
+    private static final int C_VALUE_DEC   = 2 ;
+    protected static final int C_REGPTRS = 3 ;
+    public  static final int C_ANNOTE  = 4 ;
     
-    private static final String[] columnNames = { "Address", "Value", "RegPtrs", "Annote" } ;
+    private static final String[] columnNames = { "Address", "Value", "Value Dec", "RegPtrs", "Annote" } ;
     
     private MachineState		machineState ;
     private Memory 				memory ;
@@ -101,7 +102,9 @@ public class StackTableModel extends AbstractTableModel
             case C_VALUE :
                 res = Utils.asHex( memory.getAt( memLoc ) ) ;
                 break ;
-                
+            case C_VALUE_DEC:
+                res = String.valueOf(memory.getAt(memLoc));
+                break;
             case C_REGPTRS :
                 {
                     String pc, sp, mp ;

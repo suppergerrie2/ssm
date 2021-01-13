@@ -18,6 +18,7 @@ import java.io.Reader;
 import javax.swing.UIManager;
 
 import nl.uu.cs.ssm.Config;
+import nl.uu.cs.ssm.Utils;
 
 public class Runner extends Thread
 {
@@ -62,6 +63,7 @@ public class Runner extends Thread
 	   System.out.println("  --stdin            : Read code from stdin");
 	   System.out.println("  --file <path>      : Read code from path");
 	   System.out.println("  --cli              : No GUI, runs code and exits on halt");
+	   System.out.println("  --testmode         : Use file named [inputfile].out to compare the output result of the program to");
 	   System.out.println("  --guidelay         : Amount of time to sleep in milliseconds between steps in the GUI. Default: 50");
 	   System.exit(1);
    }
@@ -90,6 +92,8 @@ public class Runner extends Thread
 		long steps = -1;
 		boolean stdin = false;
 		boolean cli = false;
+		boolean testMode = false;
+		File expectedOutput = null;
 		int guiDelay =50;
 		for (int i = 0; i< args.length; i++) {
 			String key = args[i];
@@ -128,18 +132,39 @@ public class Runner extends Thread
 				i++;
 				guiDelay = Integer.parseInt(args[i]);
 				break;
+            case "--testmode":
+                testMode = true;
+                break;
 			default:
 				usage();
 			}
 		}
 
-		if(initialFile != null && !initialFile.exists()) {
-			System.out.println("Input file does not exist");
-			usage();
-		}
+        if(initialFile != null && !initialFile.exists()) {
+            System.out.println("Input file does not exist");
+            usage();
+        }
+
+		if(testMode) {
+            if (!cli) {
+                System.out.println("Can only set test mode in cli mode.");
+                return;
+            } else if(initialFile == null) {
+                System.out.println("Need an input specified to use test mode.");
+                return;
+            } else {
+                expectedOutput = new File(Utils.withoutExtension(initialFile) + ".out");
+
+                if(!expectedOutput.exists()) {
+                    System.out.printf("Expected program output %s file does not exist%n",
+                            expectedOutput.getAbsolutePath());
+                    return;
+                }
+            }
+        }
 
 		if(cli) {
-			CliRunner cliRunner = new CliRunner( steps);
+			CliRunner cliRunner = testMode ? new CliTestRunner(expectedOutput, steps) : new CliRunner( steps);
 			if(stdin) {
 		        BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
 		        cliRunner.load(reader);

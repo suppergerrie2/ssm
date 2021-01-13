@@ -10,8 +10,13 @@ package nl.uu.cs.ssm ;
 
 import java.awt.Rectangle;
 import java.io.File;
+import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.nio.ByteBuffer;
+import java.nio.charset.Charset;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Enumeration;
@@ -221,6 +226,12 @@ public class Utils
         }
         return ext;
     }
+
+    public static String withoutExtension(File f) {
+        String p = f.getAbsolutePath();
+
+        return p.substring(0, p.length() - getExtension(f).length() - 1);
+    }
     
     public static String ppList( Object l[] )
     {
@@ -291,5 +302,12 @@ public class Utils
         ByteBuffer b = ByteBuffer.allocate(4);
         b.putInt(n);
         return new String(b.array(), "UTF-32BE");
+    }
+
+    public static String readFile(Path path, Charset encoding)
+            throws IOException
+    {
+        byte[] encoded = Files.readAllBytes(path);
+        return new String(encoded, encoding);
     }
 }
